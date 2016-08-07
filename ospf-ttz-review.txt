@@ -1,0 +1,492 @@
+To: ​rtg-ads@ietf.org
+Cc: ​rtg-dir@ietf.org, draft-ietf-ospf-ttz.all@ietf.org, ospf-wg@ietf.org
+Subject: RtgDir review (initial): draft-ietf-ospf-ttz-03
+
+Hello,
+
+I have been selected as the Routing Directorate reviewer for this draft. The Routing Directorate seeks to review all routing or routing-related drafts as they pass through IETF last call and IESG review, and sometimes on special request. The purpose of the review is to provide assistance to the Routing ADs. For more information about the Routing Directorate, please see ​http://trac.tools.ietf.org/area/rtg/trac/wiki/RtgDir
+
+Although these comments are primarily for the use of the Routing ADs, it would be helpful if you could consider them along with any other IETF Last Call comments that you receive, and strive to resolve them through discussion or by updating the draft.
+
+Document: draft-ietf-ospf-ttz-03
+Reviewer: Christian Hopps
+Review Date: April 26, 2016
+IETF LC End Date: unknown
+Intended Status: Experimental
+
+Summary:
+========
+
+    I have some concerns about this document and recommend that the
+    Routing ADs discuss these issues further with the authors.
+
+Comments:
+=========
+
+    While I believe that the document is for the most part readable and
+    understandable, I believe it still requires better or more definitions,
+    clarifications, and/or additional text before becoming an RFC.
+
+Major Issues:
+=============
+
+[section "2.  Terminology"]
+
+    - An edge router is defined as a router with internal and external adjacencies.
+    (and referred to this way later in the text as well). Is this the actual
+    definition or is it instead when a router has links that are and are not
+    configured as TTZ internal? This makes a big difference b/c the former case
+    is very dynamic while the latter is static. One could imagine in the former
+    case that a router is configured to be within a TTZ and then by virtue of
+    who it becomes adjacent with determines whether it is internal or edge.
+    While this makes configuration very simple I think it also has a big impact
+    on the complexity of the protocol interactions.
+
+    After reading section 11.1 "Configuring TTZ" which proposes "some options
+    for configuring a TTZ", it certainly seems that the intention is for links
+    to be determined to be within a TTZ or not based only on configuration. If
+    this is indeed the case I think this needs to be stated up front and very
+    clearly, and I would suggest changing all the text in "2. Terminology" to
+    talk about configuration instead of adjacencies. For example:
+
+    "TTZ link or TTZ internal link: a link configured to be inside the TTZ."
+
+    "TTZ external link: a link not configured to be within a TTZ"
+
+    "TTZ internal router: a router configured with only TTZ internal links."
+
+    "TTZ external router: a router with no configured TTZ internal links"
+
+    "TTZ edge router: a router configured with both TTZ internal and TTZ
+    external links."
+
+[section "7.  Constructing LSAs for TTZ" paragraph 6 and 7]
+
+   ... "The cost of the link is the cost of the shortest path from this TTZ edge
+   router to the other TTZ edge router within the TTZ."
+
+   "In addition, the LSA may contain a third group of links, which are the stub
+   links for the loopback addresses inside the TTZ to be accessed by nodes
+   outside of the TTZ."
+
+   - So basically every SPF from a TTZ internal topology change can lead to new
+   edge router LSAs being advertised throughout the area to adjust the "virtual"
+   routing link costs. This is noteworthy because while you've hidden state
+   using the TTZ, the dynamics of the network haven't gotten simpler rather
+   they've gotten more complex, as changes are now cascading rather than being
+   singular. This is an interesting trade-off choosing perpetual run-time and
+   protocol complexity in order to avoid the one time cost of new area creation.
+   Would it be worth actually pointing out these costs of using TTZ?
+
+[section "7.  Constructing LSAs for TTZ" paragraph 8]
+
+     "To migrate to a TTZ smoothly, a TTZ edge router virtualizes the TTZ in two
+     steps. At first, the router updates its normal router LSA by adding a
+     point-to-point link to each of the other edge routers of the TTZ and a stub
+     link for each of the loopback addresses in the TTZ to be accessed outside
+     of the TTZ into the LSA. And then it removes the links configured as TTZ
+     links from its updated router LSA after sending its updated router LSA and
+     receiving the updated router LSAs originated by the other TTZ edge routers
+     for MaxLSAAdvTime or after sending its updated router LSA for
+     MaxLSAGenAdvTime (refer to Appendix A)."
+
+   In order to be sure I understood this I basically broke it apart and put it together
+   again with possibly incorrect reductions. I ended up with:
+
+     To migrate to a TTZ smoothly, a TTZ edge router virtualizes the TTZ in two steps:
+
+     Step 1: The router updates its router LSA by adding a point-to-point link
+     to each of the other known edge routers in the TTZ, and also by adding the
+     stub links advertised by TTZ internal routers.
+
+     Step 2: After RMaxLSAAdvTime (.1 seconds) or MaxLSAGenAdvTime (.3 seconds)
+     remove the TTZ links from its router LSA.
+
+[section "10.  Computation of Routing Table"
+
+   The text says to ignore *all* links from a TTZ edge routers router LSA. This
+   presumably works b/c the SPF is also going to use the advertised TTZ Router
+   LSA instead. Shouldn't the fact that the SPF should using the new TTZ Router
+   LSA be stated somewhere as well?
+
+Minor Issues:
+=============
+
+[section: "Introduction" 2nd paragraph]
+
+    The initial sentence makes an assertion about complexity and time
+    consumption for area creation. The following sentence does not back this
+    assertion up but merely describes the act of creating a new area. I found
+    this less than compelling.
+
+[section: "2. Terminology"]
+
+    This need not be addressed here but it's where I had the question: Can a
+    TTZ edge router be in more than one TTZ?
+
+[section "5.1.  Overview of Topology-Transparent Zone" 3rd paragraph ]
+
+    "In addition to having the functions of an OSPF area", is this actually the
+    case? That is, is a TTZ really a superset of OSPF area functionality? I'm
+    pretty sure it is not.
+
+[section "5.1.  Overview of Topology-Transparent Zone" Bullet 1]
+
+   "o  An OSPF TTZ is virtualized as the TTZ edges connected each other."
+
+   This is a very important bullet as it actually will describe what a TTZ
+   really is. As such I'd suggest more precise text here. For example:
+
+   "o An OSPF TTZ represents a set of TTZ internal routers as a full mesh of
+   virtual links between the TTZ edge routers."
+
+   ?
+
+[section "5.1.  Overview of Topology-Transparent Zone" Bullet 2]
+
+   "An OSPF TTZ receives the link state information about the
+   topology outside of the TTZ, stores the information in the TTZ and floods the
+   information through the TTZ to the routers outside of the TTZ."
+
+   This bullet is a bit clunky to read. Perhaps something more direct like:
+
+   "Non-TTZ link state information is handled as normal (i.e., it is not
+   filtered or modified by a TTZ)"
+
+   If you want to keep the original text then a couple nits:
+
+   "An OSPF TTZ receives" => "TTZ Routers receive"
+
+   "stores the information in the TTZ and floods" => "store the information, and flood"
+
+[section: "6.1.  General Format of TTZ LSA" paragraph 3]
+
+   "A TTZ LSA having an optional TTZ Router TLV is called a TTZ Router LSA. A TTZ
+   LSA containing a TTZ Options TLV is called a TTZ Control LSA."
+
+   Can these ever be combined? By naming them distinctly like this, it seems to
+   be exclusive, if this is the case that should probably be more clearly
+   defined.
+
+   In general I think more expansion and clarity here is in order. Instead of
+   talking about LS Type 10/9 with a note about type 10. Why not discuss each type:
+   - LS Type 9 "Link local scope" when it is used, and what is optional and mandatory in it.
+   - LS Type 10 "Area scope" when it is used, and what is optional and mandatory in it.
+
+[section "6.3.  TTZ Router TLV" paragraph 1]
+
+   "The format of a TTZ Router TLV is as follows.  It contains the
+   contents of a router LSA."
+
+   Is this trying to say:
+
+   "It has the same content as a standard OSPF Router LSA (RFC x-ref) with the
+   following modifications"?
+
+[section "6.3.  TTZ Router TLV" TLV content]
+
+   Given the existence of the TLV-Length, is the "# links" field redundant? What
+   happens if they correctly correlate?
+
+[section "6.4.  TTZ Options TLV" "flags"]
+
+   So "exclusive" => "mutually exclusive"?
+
+   If this is the case these aren't really flags but rather one of 4 possible
+   values (I believe in the all 0 case the TLV is not advertised?), and if so it
+   would be much better to simply define the 4 possible values using 2 bits.
+
+   What happens if more than one bit is set to 1?
+
+[section "7.  Constructing LSAs for TTZ" paragraph 3]
+
+   This text can be read to indicate that for TTZ internal routers the router's
+   normal Router LSA content is copied into a TTZ Router TLV, does the router
+   also advertise its Router LSA as normal or is that then suppressed? It's not
+   clear to me why this information needs copying, and so I'm wondering if the
+   text is saying that no TTZ Router TLV is included, and that the TTZ internal
+   router just advertises it's regular OSPF Router LSA.
+
+   The text could be more explicit. Also some of my confusion stems from earlier
+   defining a "TTZ Router LSA" as one containing an "optional TTZ Router TLV".
+   So when the text here refers to the LSA as a TTZ Router LSA one might assume
+   that the optional TTZ Router TLV must be present.
+
+   Perhaps this gets back to my want for better separating and defining
+   the LS Types and contents.
+
+[section "7.  Constructing LSAs for TTZ" paragraph 4 and 9]
+
+   "After receiving a trigger to migrate to TTZ such as a TTZ LSA with
+   flag M = 1, a TTZ edge router originates its normal router LSA for
+   virtualizing a TTZ, which comprises three groups of links in general."
+
+   "To roll back from a TTZ smoothly after receiving a trigger to roll
+   back from TTZ, ..."
+
+   - Triggers are mentioned a few times throughout the text. I think the
+     triggers meaning, rather than being initially implied, should be explicit
+     defined early and in 1 location. It isn't until section 11.2 that I thought
+     I understood what triggers were and how they worked.
+
+     Actually the triggers are defined in section 6.4, but the text there never
+     actually uses the word "trigger". I suggest that this be changed so that it
+     is clear what a trigger is prior to the use of the term.
+
+[section "8.1.  Discover TTZ Neighbors" paragraph 2]
+
+   "If two ends of the link have different TTZ IDs, no TTZ adjacency over
+   the link will be "formed"."
+
+   - In general I'm somewhat confused about the actual definition of a TTZ
+     adjacency. How does it compare to a normal protocol adjacency. In the above
+     case you would have a protocol adjacency I believe, but no TTZ adjacency?
+     How is this link advertised if the router is a TTZ edge router?
+
+[section "8.1.  Discover TTZ Neighbors" paragraph 5]
+
+   The text talks about when (Z==0 and there is a TTZ LSA with T=1) or Z==1. Where
+   are all the places that T=1 is showing up? What about the case when an
+   adjacency is forming when M=1 instead of T=1?
+
+[section "8.1.  Discover TTZ Neighbors" paragraph 7]
+
+   Since the diagram state Zs are the same, it no longer applies to the rest of
+   section 8. Is it worthwhile to have a new diagram here for clarity?
+
+[section "8.1.  Discover TTZ Neighbors" paragraph 8]
+
+   Here's a mention of "triggers B to migrate", I think you probably should
+   state explicitly what this means, which I *think* is:
+
+   "A also sends a D-LSA containing a TTZ Control TLV with M=1 to B, triggering
+   it to migrate."
+
+   Although this now makes me wonder what does B do on receiving M=1 if it had
+   not received or been configured for T=1 yet?
+
+[section "8.1.  Discover TTZ Neighbors" paragraph 9]
+
+   I would break this paragraph up to make clear that 2 distinct things are
+   happening based on 2 different events. So:
+
+   "When B receives the D-LSA from A and determines they have the same
+   TTZ ID but its Z=0 and A's Z=1, B sends A all the TTZ LSAs it has and
+   starts to migrate to TTZ after receiving A's D-LSA with M=1.  After
+   migration to TTZ, B updates and advertises its LSAs as needed."
+
+   becomes:
+
+   "When B receives the D-LSA from A and determines they have the same
+   TTZ ID but its Z=0 and A's Z=1, B sends A all the TTZ LSAs it has."
+
+   "When B receives the D-LSA from A with M=1 it starts to migrate to TTZ. After
+   migration to TTZ, B updates and advertises its LSAs as needed."
+
+   Does "starts to migrate" here simply means B starts setting it's M=1 as
+   well?
+
+   What exactly is happening for B to go from "starts to migrate" to "After
+   migration"? I believe this is indicated by Z=0 transitioning to Z=1 (is the
+   TTZ Control TLV with M=1 also removed from the D-LSA?)
+
+   What LSAs are being updated and advertised by B here?
+
+[section "8.1.  Discover TTZ Neighbors" paragraph 10]
+
+   "After receiving B's D-LSA with Z=1, A updates and sends B its D-LSA
+   by removing the Options TLV.  It also updates and advertises its LSAs
+   as needed."
+
+   What LSAs are being updated and advertised by A here?
+
+[section "8.1.  Discover TTZ Neighbors" in general]
+
+   Are D-LSA sent periodically, if so how often, if not when precisely are they
+   sent?
+
+   What happens when B changes its TTZ ID or doesn't send a D-LSA?
+
+[section "8.1.  Discover TTZ Neighbors" Broadcast and NBMA part (i.e., paragraph 11+)]
+
+[section "8.1.  Discover TTZ Neighbors" paragraph 12]
+
+   So the mis-configured router behavior is dependent on when the mis-configured
+   router is introduced? If introduced prior to any adjacency formation then its
+   presence will keep all routers from becoming TTZ adjacent, otherwise only
+   itself will not have become TTZ adjacent?
+
+   What does mis-configured mean, a different TTZ ID? What about the lack of the
+   receipt of a D-LSA on the link? How long does the DR wait for receipt of a
+   D-LSA from each neighbor before deciding it won't be receiving one and the
+   neighbor is not configured on this link as part of TTZ?
+
+[section "8.1.  Discover TTZ Neighbors" last paragraph]
+
+   Is this just saying: "routers only TTZ discover after forming a normal
+   adjacency"?
+
+[section "9.1.  Advertisement of LSAs within TTZ" paragraph 2]
+
+   "Any network LSA generated for a broadcast or NBMA network in a TTZ is
+   advertised within the TTZ."
+
+   [nit: And not outside? This is explicit for the router LSA.]
+
+   What happens when a DR has a mis-configured router on a broadcast network and
+   thus is not forming a TTZ adjacency with it? It still has a normal adjacency
+   right? So it no has a network LSA that includes both TTZ and non-TTZ routers
+   where does it advertise this network LSA?
+
+[section "11.2.  Smooth Migration to TTZ" paragraph 5]
+
+   I was confused by many mentions earlier in the document to a router migrating
+   to a TTZ. I think what paragraph 5 in section 11.2 is saying (in too many
+   words) is this:
+
+   "Migrating to a TTZ" means a router advertises a TTZ Control TLV with M=1. A
+   router "Migrates to a TTZ" either when configured to do so or when it
+   receives a TTZ Control TLV with M=1.
+
+   If this is the case then I think something like the above text should occur
+   earlier in the document.
+
+[section "11.3.  Adding a Router into TTZ" paragraph 3]
+
+   I don't understand the intent of this paragraph. Is it just saying that if
+   TTZ is configured on a link between 2 non-adjacent routers, when they
+   eventually become adjacent they will also form a TTZ adjacency?
+
+[section "13.  Security Considerations"]
+
+   This seems a bit weak or perhaps just wrong. Perhaps better would be to say
+   that TTZ relies on the OSPF security mechanisms in place and has the same
+   security threat surface?
+
+Nits:
+=====
+
+[section: "2. Terminology" 3rd item]
+
+   "TTZ external router: a router outside of a TTZ without any TTZ
+   internal link."
+
+   =>
+
+   "TTZ external router: a router outside of a TTZ that has no TTZ
+   internal links."
+
+[section: "2. Terminology" 4th item]
+
+   Move below 5th item that it references
+
+[section "4. Requirements" 1st paragraph]
+
+    - "*A* Topology-Transparent Zone"
+    - "for *a* TTZ"
+
+[section "5.1.  Overview of Topology-Transparent Zone" 1st paragraph ]
+
+    Define and use TTZ ID, rather than just "(ID)" as that is what the rest of
+    the document refers to this as, and is more specific anyway.
+
+[section "5.2.  Some Details on TTZ" paragraph 4]
+
+   "Note that none of the TTZ internal routers can be an ABR."
+
+   =>
+
+   "Note that by definition a TTZ internal router cannot also be an ABR."
+
+[section "6.4.  TTZ Options TLV" paragraph 2]
+
+   "as needed" => "as described below"?
+
+
+[section "6.5.  Link Scope TTZ LSA" diagram and paragraph 1]
+
+   "Options TLV" => "TTZ Options TLV" (and all other uses?)
+
+[section "8.  Establishing Adjacencies"]
+
+   "This section describes the adjacencies in different cases."
+
+   =>
+
+   "This section describes the TTZ adjacencies."
+
+[section "8.1.  Discover TTZ Neighbors" multiple paragraphs]
+
+   "discover TTZ each other" => "TTZ discover each other"
+
+[various section "8.1.  Discover TTZ Neighbors" ...]
+
+   Text uses <bit>=<value> and <bit>==<value> but in both cases it means
+   equality check, not assignment, pick and use one consistently in the
+   document.
+
+   On the use of parenthesis, the text is using parenthesis as a form of
+   grouping as one might in mathematics which I'm not sure is proper.
+   Parenthesis in writing are generally used as an aside. Probably the clearest
+   way to indicate the logical grouping would be to use a list, e.g.,
+
+   When one of the following conditions is met.
+
+     - Z = 0 and there is a TTZ Options LSA with T = 1
+     - Z = 1
+
+   ...
+
+[section "9.1.  Advertisement of LSAs within TTZ" paragraph 1]
+
+   "advertised within" => "advertised only within"
+
+[section "11.1.  Configuring TTZ" last paragraph]
+
+   "the above one" => "option 1"
+
+[section "11.3.  Adding a Router into TTZ" paragraph 1]
+
+   "When a non TTZ router (say R1) is connected via a P2P link to a TTZ
+   router (say T1) working as TTZ and there is a normal adjacency
+   between them over the link, a user can configure TTZ on two ends of
+   the link to add R1 into the TTZ to which T1 belongs.  They discover
+   TTZ each other with the TTZ as described in section 8."
+
+   =>
+
+   "When a non TTZ router (say R1) is connected via a P2P link to a migrated TTZ
+   router (say T1), and there is a normal adjacency between them over the link,
+   a user can configure TTZ on both ends of the link to add R1 into the TTZ to
+   which T1 belongs. They TTZ discover each other as described in section 8."
+
+[section "11.3.  Adding a Router into TTZ" paragraph 2]
+
+   "When a number of non TTZ routers are connected via a broadcast link
+   to a TTZ router (say T1) working as TTZ and there are normal
+   adjacencies among them, a user configures TTZ on the connection to
+   the link on every router to add the non TTZ routers into the TTZ to
+   which T1 belongs.  The DR for the link "forms" TTZ adjacencies with
+   the other routers connected to the link if they all have the same TTZ
+   ID configured for the link.  This is determined through the discovery
+   process described in section 8."
+
+   =>
+
+   "When non TTZ routers are connected via a broadcast or NBMA link to a
+   migrated TTZ router (say T1), and there are normal adjacencies among them, a
+   user configures TTZ on the connection to the link on every router to add the
+   non TTZ routers into the TTZ to which T1 belongs. The DR for the link "forms"
+   TTZ adjacencies with the other routers connected to the link if they all have
+   the same TTZ ID configured for the link. This is determined through the
+   TTZ discovery process described in section 8."
+
+[section "12.2.  Implementation Experience"]
+
+   Convert IETF 90 to (or include) a date.
+
+[section "14.  IANA Considerations"]
+
+   While not requested in the text, a new registry needs to be created for the
+   management of TTZ TLV types and so information regarding this new registry in
+   addition to the initial seed values is required.
