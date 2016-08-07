@@ -1,13 +1,10 @@
-
-Hello,
-
 I have been selected as the Routing Directorate reviewer for this draft. The Routing Directorate seeks to review all routing or routing-related drafts as they pass through IETF last call and IESG review, and sometimes on special request. The purpose of the review is to provide assistance to the Routing ADs. For more information about the Routing Directorate, please see ​http://trac.tools.ietf.org/area/rtg/trac/wiki/RtgDir
 
 Although these comments are primarily for the use of the Routing ADs, it would be helpful if you could consider them along with any other IETF Last Call comments that you receive, and strive to resolve them through discussion or by updating the draft.
 
-Document: draft-ietf-pce-pcep-service-aware-11
+Document:
 Reviewer: Christian Hopps
-Review Date: August 7th, 2016
+Review Date:
 IETF LC End Date: Unknown
 Intended Status: Standards Track
 
