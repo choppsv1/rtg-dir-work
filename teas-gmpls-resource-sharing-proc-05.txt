@@ -1,0 +1,144 @@
+I have been selected as the Routing Directorate reviewer for this draft. The
+Routing Directorate seeks to review all routing or routing-related drafts as
+they pass through IETF last call and IESG review, and sometimes on special
+request. The purpose of the review is to provide assistance to the Routing ADs.
+For more information about the Routing Directorate, please see
+​http://trac.tools.ietf.org/area/rtg/trac/wiki/RtgDir
+
+Although these comments are primarily for the use of the Routing ADs, it would
+be helpful if you could consider them along with any other IETF Last Call
+comments that you receive, and strive to resolve them through discussion or by
+updating the draft.
+
+Document: draft-ietf-teas-gmpls-resource-sharing-proc-05
+Reviewer: Christian Hopps
+Review Date: 2016-12-06
+IETF LC End Date: Unknown
+Intended Status: Informational
+
+Summary:
+========
+
+    This document is basically ready for publication, but has 1 minor issue and
+    various nits that should be considered prior to publication.
+
+Comments:
+=========
+
+    I found the draft fairly well written, easy to understand with good
+    references. I believe that after fixing the minor issue and nits,
+    this informational draft will be ready for publication. This was the
+    first TEAS draft I have reviewed, and as a result it may mean that
+    my review is less in depth than others.
+
+Major Issues:
+=============
+
+    No major issues found.
+
+
+Minor Issues:
+=============
+
+    1. 3rd paragraph: First sentence doesn't parse for me, i.e., I can't figure
+       out what this means:
+
+           "In GMPLS end-to-end recovery schemes generally considered,
+           restoration..."
+
+       Is it trying to say:
+
+           "When considering GMPLS end-to-end recovery schemes, the
+           restoration..."?
+
+       or
+
+           "Generally GMPLS end-to-end recovery schemes have the restoration..."
+
+       or
+
+            ...?
+
+Nits:
+=====
+
+    Most of these are due to missing articles (i.e., the/a/an). I may
+    have missed some.
+
+    1. 2nd paragraph:
+          Change: "ASSOCIATION object" to "an ASSOCIATION object"
+
+    1. 4th paragraph:
+        Add a comma after "teardown"
+        Change: "including following" to "including the following"
+
+    1. 6th paragraph:
+        Change: "ASSOCIATION object with" to "an ASSOCIATION object with"
+        Change: "Procedure" to "The procedure"
+        Change: "ASSOCIATION object is" to "an ASSOCIATION object is"
+
+    2.1. 1st paragrah:
+        Change: ", working LSP" to: ", a working LSP"
+        Change:
+            "Unlike protection LSP, restoration LSP is signaled per need basis."
+        to:
+            "Unlike a protection LSP, a restoration LSP is signaled on a per
+            need basis."
+
+    2.1. 2nd paragraph:
+        Change: "Typically when failure is recovered"
+        to: "Typically when the failure has recovered"
+        Change: "restoration LSP" to: "the restoration LSP"
+        Change: "and torn down, while" to: "and is torn down while"
+
+    2.2. 2nd paragraph:
+        Change ", working LSP on" to: ", a working LSP on"
+        Change "and protecting LSP on" to: "and a protecting LSP on"
+        Change:
+            "Nonetheless, restoration LSP with working LSP it is restoring as
+            well as restoration LSP with protecting LSP it is restoring can
+            share network resources.
+        to:
+            "Nonetheless, a restoration LSP with the working LSP it is restoring
+            as well as a restoration LSP with the protecting LSP it is restoring
+            can share network resources.
+
+    2.2. 3nd paragraph:
+        Change: "restoration LSP" to "a restoration LSP"
+
+    2.2. 4th paragraph:
+        Change: "either working" to: "either a working"
+
+    2.2. 5th paragraph:
+        Change: "either working" to: "either a working"
+
+    3.2. 4th paragraph:
+        Change: ", node may" to: ", a node may"
+
+    3.2. 5th paragraph:
+        Change: "reroute procedure" to: "the reroute procedure"
+        Change: "rerouting process" to: "the rerouting process"
+
+    3.2. Table 1, Category C1, 2nd paragraph:
+    3.2. Table 1, Category C2, 2nd paragraph:
+    3.2. Table 1, Category C3, 2nd paragraph:
+        In each change "This type of nodes needs" to:
+            "This type of node needs".
+        or
+            "These types of nodes need".
+
+    3.3. 2nd paragraph:
+        Change "with working" to "with a working"
+
+    3.3. 3rd paragraph:
+        Change "with working" to "with a working"
+
+    3.3.1. 2nd paragraph:
+        Change "has few" to "has a few".
+
+    3.3.1. 3rd from last paragraph:
+        Change "in corner cases completion guarantee" to
+        "in corner cases a completion guarantee"
+
+    3.3.2. 1st paragraph:
+        Change "head-end chooses" to "the head-end chooses"
