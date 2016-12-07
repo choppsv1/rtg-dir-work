@@ -14,37 +14,61 @@ Intended Status: Standards Track
 Summary:
 ========
 
-    No issues found. This document is ready for publication.
-    This document is basically ready for publication, but has nits that should be considered prior to publication.
-    I have some minor concerns about this document that I think should be resolved before publication.
-    I have significant concerns about this document and recommend that the Routing ADs discuss these issues further with the authors.
+    [ ] No issues found. This document is ready for publication.
+
+    [ ] This document is basically ready for publication, but has nits that
+    should be considered prior to publication.
+
+    [ ] I have some minor concerns about this document that I think should be
+    resolved before publication.
+
+    [ ] I have significant concerns about this document and recommend that the
+    Routing ADs discuss these issues further with the authors.
 
 Comments:
 =========
 
     Please supply an overview of the draft quality and readability.
-    Include anything else that you think will be helpful toward understanding your review.
+
+    Include anything else that you think will be helpful toward understanding
+    your review.
 
 Major Issues:
 =============
 
-    Major issues are the type of concerns that will result in the document being blocked until they are resolved. The Routing ADs will become involved.
-    Please include all of the major issues you have found. Give as much context information as possible (e.g., section numbers, paragraph counts).
+    Major issues are the type of concerns that will result in the document being
+    blocked until they are resolved. The Routing ADs will become involved.
+
+    Please include all of the major issues you have found. Give as much context
+    information as possible (e.g., section numbers, paragraph counts).
+
     If you find no major issues, please write: "No major issues found."
 
 
 Minor Issues:
 =============
 
-    Minor issues are concerns about clarity or technical accuracy that should be discussed and resolved before publication, but which would normally be resolved between the authors and the reviewers.
-    Please include all of the minor issues you have found. Give as much context information as possible (e.g., section numbers, paragraph counts).
-    If you find no minor issues, please write: "No minor issues found."
+    Minor issues are concerns about clarity or technical accuracy that should be
+    discussed and resolved before publication, but which would normally be
+    resolved between the authors and the reviewers.
 
+    Please include all of the minor issues you have found. Give as much context
+    information as possible (e.g., section numbers, paragraph counts).
+
+    If you find no minor issues, please write: "No minor issues found."
 
 Nits:
 =====
 
-    Nits are editorial or layout items. They are things that would ideally be resolved before publication to make the document more readable, and may be raised now to save the RFC Editor work.
-    Usually a reviewer will not be looking for this type of issue, but may find some in the course of their review.
-    Please try to avoid raising esoteric questions of English usage. The RFC Editor will spot these, and it is not a wise use of time to discuss these things.
+    Nits are editorial or layout items. They are things that would ideally be
+    resolved before publication to make the document more readable, and may be
+    raised now to save the RFC Editor work.
+
+    Usually a reviewer will not be looking for this type of issue, but may find
+    some in the course of their review.
+
+    Please try to avoid raising esoteric questions of English usage. The RFC
+    Editor will spot these, and it is not a wise use of time to discuss these
+    things.
+
     If you find no nits, please leave this section out.
